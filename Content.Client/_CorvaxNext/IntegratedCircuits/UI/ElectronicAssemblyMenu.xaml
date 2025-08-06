@@ -1,0 +1,28 @@
+﻿<controls:FancyWindow
+    xmlns="https://spacestation14.io"
+    xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+    MinSize="800 550"
+    Title="Настройка интегралки">
+
+    <BoxContainer Orientation="Vertical" VerticalExpand="True" HorizontalExpand="True" MouseFilter="Stop">
+        <BoxContainer Orientation="Horizontal" VerticalExpand="True" HorizontalExpand="True">
+            <BoxContainer Margin="5 5 5 5" MinSize="20 20" Orientation="Vertical" VerticalExpand="True" HorizontalExpand="True">
+                <ScrollContainer VerticalExpand="True">
+                    <ItemList Name="CircuitList"/>
+                </ScrollContainer>
+            </BoxContainer>
+            <ScrollContainer Margin="5 5 5 5" VerticalExpand="True" HorizontalExpand="True" HScrollEnabled="False" >
+                <BoxContainer Orientation="Vertical" HorizontalExpand="True">
+                    <Label Margin="0 5 5 5" Text="Настройка проводов:"/>
+                    <BoxContainer Orientation="Vertical" Name="Wires" VerticalExpand="True" HorizontalExpand="True"/>
+                    <Label Margin="0 5 5 5" Text="Настройка ивентов:"/>
+                    <BoxContainer Orientation="Vertical" Name="Events" VerticalExpand="True" HorizontalExpand="True"/>
+                    <Label Margin="0 5 5 5" Text="Настройка схемы:"/>
+                    <BoxContainer Orientation="Vertical" Name="CircuitSettings" VerticalExpand="True" HorizontalExpand="True"/>
+                </BoxContainer>
+            </ScrollContainer>
+        </BoxContainer>
+        <Label Margin="5 5 5 5" Name="DebugState" Text=""/>
+    </BoxContainer>
+
+</controls:FancyWindow>

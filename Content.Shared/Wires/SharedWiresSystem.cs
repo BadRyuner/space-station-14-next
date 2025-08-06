@@ -1,3 +1,4 @@
+using Content.Shared._CorvaxNext.IntegratedCircuits.Components;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Database;
 using Content.Shared.Examine;
@@ -155,6 +156,13 @@ public abstract class SharedWiresSystem : EntitySystem
 
     private void OnAttemptOpenActivatableUI(EntityUid uid, ActivatableUIRequiresPanelComponent component, ActivatableUIOpenAttemptEvent args)
     {
+        // corvax-next start
+        // мда, нельзя регать два одинаковых ивента...
+        if (args.Cancelled || !TryComp<ElectronicAssemblyComponent>(uid, out var assembly)) { }
+        else if (component.RequireOpen != assembly.Open)
+            args.Cancel();
+        // corvax-next end
+
         if (args.Cancelled || !TryComp<WiresPanelComponent>(uid, out var wires))
             return;
 

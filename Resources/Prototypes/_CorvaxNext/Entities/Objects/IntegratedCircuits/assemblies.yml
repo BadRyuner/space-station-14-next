@@ -1,0 +1,30 @@
+- type: entity
+  id: BaseElectronicAssembly
+  name: Base Electronic Assembly
+  description: It's a case, for building small electronics with.
+  abstract: true
+  parent: BaseItem
+  components:
+    - type: ContainerContainer
+      containers:
+        circuits: !type:Container
+    - type: ActivatableUI
+      key: enum.ElectronicAssemblyUiKey.Key
+      singleUser: true
+    - type: UserInterface
+      interfaces:
+        enum.ElectronicAssemblyUiKey.Key:
+          type: ElectronicAssemblyBoundUserInterface
+    - type: ActivatableUIRequiresPanel
+
+- type: entity
+  id: ElectronicAssemblyTypeA
+  name: Electronic Assembly Type A
+  description: Electronic Assembly Type A
+  parent: BaseElectronicAssembly
+  components:
+    - type: ElectronicAssembly
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/assemblytypea.rsi
+      layers:
+        - state: classic

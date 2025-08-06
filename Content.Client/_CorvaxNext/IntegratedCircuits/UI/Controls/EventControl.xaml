@@ -1,0 +1,8 @@
+﻿<Control
+    xmlns="https://spacestation14.io"
+    VerticalExpand="True" HorizontalExpand="True">
+    <BoxContainer Orientation="Vertical" VerticalExpand="True" HorizontalExpand="True">
+        <Button Name="MainEvent" HorizontalExpand="True"/>
+        <BoxContainer Orientation="Vertical" Name="Relationship" VerticalExpand="True" HorizontalExpand="True"/>
+    </BoxContainer>
+</Control>

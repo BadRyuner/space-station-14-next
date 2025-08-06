@@ -1,0 +1,68 @@
+- type: entity
+  id: BaseCircuitModule
+  name: Base Circuit Module
+  description: Base Circuit Module
+  abstract: true
+  parent: BaseItem
+
+- type: entity
+  id: SpeakerCircuitModule
+  name: Speaker Circuit Module
+  description: Speaker Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      wires:
+      - name: "Text"
+        wireaccess: In
+        wiretype: String
+      - name: "Name"
+        wireaccess: In
+        wiretype: String
+      events:
+      - name: "Say"
+        eventtype: PulseIn
+    - type: SpeakerCircuit
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/speaker.rsi
+      layers:
+        - state: classic
+    - type: Speech
+      speechVerb: Robotic
+      speechSounds: Borg
+
+- type: entity
+  id: ButtonCircuitModule
+  name: Button Circuit Module
+  description: Button Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      events:
+      - name: "On Click"
+        eventtype: PulseOut
+    - type: ButtonCircuit
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/button.rsi
+      layers:
+        - state: classic
+
+- type: entity
+  id: StringMemoryCircuitModule
+  name: String Memory Circuit Module
+  description: String Memory Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      wires:
+      - name: "Text"
+        wireaccess: Out
+        wiretype: String
+      events:
+      - name: "Write"
+        eventtype: PulseIn
+    - type: StringMemoryCircuit
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/stringmem.rsi
+      layers:
+        - state: classic

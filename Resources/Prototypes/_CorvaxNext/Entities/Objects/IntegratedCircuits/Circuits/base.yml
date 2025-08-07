@@ -1,0 +1,6 @@
+- type: entity
+  id: BaseCircuitModule
+  name: Base Circuit Module
+  description: Base Circuit Module
+  abstract: true
+  parent: BaseItem

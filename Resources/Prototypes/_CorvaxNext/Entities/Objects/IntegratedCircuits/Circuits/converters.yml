@@ -1,0 +1,73 @@
+- type: entity
+  id: BaseConverterCircuitModule
+  name: Base Converter Circuit Module
+  description: Base Converter Circuit Module
+  parent: BaseCircuitModule
+  abstract: true
+  components:
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/converter.rsi
+      layers:
+        - state: classic
+    - type: ValueConverterCircuit
+
+- type: entity
+  id: ConvertAnyStrCircuitModule
+  name: Convert Any To Str Circuit Module
+  description: Convert Any To Str Circuit Module
+  parent: BaseConverterCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 5
+      wires:
+      - name: "Input"
+        wireaccess: In
+        wiretype: Any
+      - name: "Output"
+        wireaccess: Out
+        wiretype: String
+      events:
+      - name: "Convert"
+        eventtype: PulseIn
+
+- type: entity
+  id: ConvertAntIntCircuitModule
+  name: Convert Any To Int Circuit Module
+  description: Convert Any To Int Circuit Module
+  parent: BaseConverterCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 3
+      wires:
+      - name: "Input"
+        wireaccess: In
+        wiretype: Any
+      - name: "Output"
+        wireaccess: Out
+        wiretype: Integer
+      events:
+      - name: "Convert"
+        eventtype: PulseIn
+      - name: "On Error"
+        eventtype: PulseOut
+
+- type: entity
+  id: ConvertAntFloatCircuitModule
+  name: Convert Any To Float Circuit Module
+  description: Convert Any To Float Circuit Module
+  parent: BaseConverterCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 4
+      wires:
+      - name: "Input"
+        wireaccess: In
+        wiretype: Any
+      - name: "Output"
+        wireaccess: Out
+        wiretype: Float
+      events:
+      - name: "Convert"
+        eventtype: PulseIn
+      - name: "On Error"
+        eventtype: PulseOut

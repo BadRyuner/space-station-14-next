@@ -1,0 +1,213 @@
+- type: entity
+  id: BaseMemoryCircuitModule
+  name: Base Memory Circuit Module
+  description: Base Memory Circuit Module
+  parent: BaseCircuitModule
+  abstract: true
+  components:
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/mem.rsi
+      layers:
+        - state: classic
+
+- type: entity
+  id: StringMemoryCircuitModule
+  name: String Memory Circuit Module
+  description: String Memory Circuit Module
+  parent: BaseMemoryCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 2
+      wires:
+      - name: "Text"
+        wireaccess: Out
+        wiretype: String
+      events:
+      - name: "Write"
+        eventtype: PulseIn
+    - type: StringMemoryCircuit
+
+- type: entity
+  id: IntegerMemoryCircuitModule
+  name: Integer Memory Circuit Module
+  description: Integer Memory Circuit Module
+  parent: BaseMemoryCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 1
+      wires:
+      - name: "Int"
+        wireaccess: Out
+        wiretype: Integer
+      events:
+      - name: "Write"
+        eventtype: PulseIn
+    - type: StringMemoryCircuit
+  
+- type: entity
+  id: Storage2IntMemoryCircuitModule
+  name: Storage 2 Ints Memory Circuit Module
+  description: Storage 2 Ints Memory Circuit Module
+  parent: BaseMemoryCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 2
+      wires:
+      # флаги, какие провода записать.
+      # null (если ничего не было записано) копирует всe In в соответствующий ему Out
+      # 0x0 ничего не сделает
+      # 0x1 - запишет IntIn1 -> IntOut1
+      # 0x2 - запишет IntIn2 -> IntOut2
+      # 0x3 - запишет (IntIn1, IntIn2) -> (IntOut1, IntOut2)
+      - name: "WriteMode"
+        wireaccess: In
+        wiretype: Integer
+      - name: "IntIn 1"
+        wireaccess: In
+        wiretype: Integer
+      - name: "IntIn 2"
+        wireaccess: In
+        wiretype: Integer
+      - name: "IntOut 1"
+        wireaccess: Out
+        wiretype: Integer
+      - name: "IntOut 2"
+        wireaccess: Out
+        wiretype: Integer
+      events:
+      - name: "Write"
+        eventtype: PulseIn
+      - name: "Reset" # ставит IntIn {цифра} в дефолтное значение согласно mode
+        eventtype: PulseIn
+    - type: DataStorageCircuit
+      count: 2
+      datatype: Integer
+
+- type: entity
+  id: Storage4IntMemoryCircuitModule
+  name: Storage 4 Ints Memory Circuit Module
+  description: Storage 4 Ints Memory Circuit Module
+  parent: BaseMemoryCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 3
+      wires:
+      # аналогичо, только добавляется
+      # 0x4 - запишет IntIn3 -> IntOut3
+      # 0x5 - запишет (IntIn1, IntIn3) -> (IntOut1, IntOut3)
+      # 0x6 - запишет (IntIn2, IntIn3) -> (IntOut2, IntOut3)
+      # 0x7 - запишет (IntIn1, IntIn2, IntIn3) -> (IntOut1, IntOut2, IntOut3)
+      # и т.д
+      - name: "WriteMode" 
+        wireaccess: In
+        wiretype: Integer
+      - name: "IntIn 1"
+        wireaccess: In
+        wiretype: Integer
+      - name: "IntIn 2"
+        wireaccess: In
+        wiretype: Integer
+      - name: "IntIn 3"
+        wireaccess: In
+        wiretype: Integer
+      - name: "IntIn 4"
+        wireaccess: In
+        wiretype: Integer
+      - name: "IntOut 1"
+        wireaccess: Out
+        wiretype: Integer
+      - name: "IntOut 2"
+        wireaccess: Out
+        wiretype: Integer
+      - name: "IntOut 3"
+        wireaccess: Out
+        wiretype: Integer
+      - name: "IntOut 4"
+        wireaccess: Out
+        wiretype: Integer
+      events:
+      - name: "Write"
+        eventtype: PulseIn
+      - name: "Reset"
+        eventtype: PulseIn
+    - type: DataStorageCircuit
+      count: 4
+      datatype: Integer
+
+- type: entity
+  id: Storage2StringsMemoryCircuitModule
+  name: Storage 2 Strings Memory Circuit Module
+  description: Storage 2 Strings Memory Circuit Module
+  parent: BaseMemoryCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 3
+      wires:
+      - name: "WriteMode"
+        wireaccess: In
+        wiretype: Integer
+      - name: "StrIn 1"
+        wireaccess: In
+        wiretype: String
+      - name: "StrIn 2"
+        wireaccess: In
+        wiretype: String
+      - name: "StrOut 1"
+        wireaccess: Out
+        wiretype: String
+      - name: "StrOut 2"
+        wireaccess: Out
+        wiretype: String
+      events:
+      - name: "Write"
+        eventtype: PulseIn
+      - name: "Reset"
+        eventtype: PulseIn
+    - type: DataStorageCircuit
+      count: 2
+      datatype: String
+
+- type: entity
+  id: Storage4StringsMemoryCircuitModule
+  name: Storage 4 Strings Memory Circuit Module
+  description: Storage 4 Strings Memory Circuit Module
+  parent: BaseMemoryCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 6
+      wires:
+      - name: "WriteMode" 
+        wireaccess: In
+        wiretype: String
+      - name: "StrIn 1"
+        wireaccess: In
+        wiretype: String
+      - name: "StrIn 2"
+        wireaccess: In
+        wiretype: String
+      - name: "StrIn 3"
+        wireaccess: In
+        wiretype: String
+      - name: "StrIn 4"
+        wireaccess: In
+        wiretype: String
+      - name: "StrOut 1"
+        wireaccess: Out
+        wiretype: String
+      - name: "StrOut 2"
+        wireaccess: Out
+        wiretype: String
+      - name: "StrOut 3"
+        wireaccess: Out
+        wiretype: String
+      - name: "StrOut 4"
+        wireaccess: Out
+        wiretype: String
+      events:
+      - name: "Write"
+        eventtype: PulseIn
+      - name: "Reset"
+        eventtype: PulseIn
+    - type: DataStorageCircuit
+      count: 4
+      datatype: String

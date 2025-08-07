@@ -38,7 +38,8 @@ public sealed partial class EventControl : Control
                     var comp = _menu.EntManager.GetComponent<IntegratedCircuitComponent>(circuit);
                     button = new Button()
                     {
-                        Text = $"│ <Out> {externEvent.Name} ← {comp.Id}"
+                        Text = $"│ <Out> {externEvent.Name} ← {comp.Id}",
+                        HorizontalAlignment = HAlignment.Left
                     };
                     button.OnButtonDown += _ =>
                     {
@@ -60,7 +61,8 @@ public sealed partial class EventControl : Control
                 var comp = _menu.EntManager.GetComponent<IntegratedCircuitComponent>(circuit);
                 var button = new Button()
                 {
-                    Text = $"{(i == (_event.EventLinks.Count - 1) ? '└' : '│')} <In> {writable.EventName} → {comp.Id}"
+                    Text = $"{(i == (_event.EventLinks.Count - 1) ? '└' : '│')} <In> {writable.EventName} → {comp.Id}",
+                    HorizontalAlignment = HAlignment.Left
                 };
                 button.OnButtonDown += _ =>
                 {

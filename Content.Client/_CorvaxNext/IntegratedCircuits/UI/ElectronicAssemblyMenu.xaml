@@ -1,7 +1,7 @@
 ﻿<controls:FancyWindow
     xmlns="https://spacestation14.io"
     xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
-    MinSize="800 550"
+    MinSize="1000 550"
     Title="Настройка интегралки">
 
     <BoxContainer Orientation="Vertical" VerticalExpand="True" HorizontalExpand="True" MouseFilter="Stop">
@@ -13,12 +13,13 @@
             </BoxContainer>
             <ScrollContainer Margin="5 5 5 5" VerticalExpand="True" HorizontalExpand="True" HScrollEnabled="False" >
                 <BoxContainer Orientation="Vertical" HorizontalExpand="True">
+                    <Button Margin="0 5 5 5" Name="RemoveCircuit" Text="Удалить схему"/>
                     <Label Margin="0 5 5 5" Text="Настройка проводов:"/>
-                    <BoxContainer Orientation="Vertical" Name="Wires" VerticalExpand="True" HorizontalExpand="True"/>
+                    <BoxContainer Orientation="Vertical" Name="Wires" VerticalExpand="True" HorizontalExpand="True" VerticalAlignment="Top"/>
                     <Label Margin="0 5 5 5" Text="Настройка ивентов:"/>
-                    <BoxContainer Orientation="Vertical" Name="Events" VerticalExpand="True" HorizontalExpand="True"/>
+                    <BoxContainer Orientation="Vertical" Name="Events" VerticalExpand="True" HorizontalExpand="True" VerticalAlignment="Top"/>
                     <Label Margin="0 5 5 5" Text="Настройка схемы:"/>
-                    <BoxContainer Orientation="Vertical" Name="CircuitSettings" VerticalExpand="True" HorizontalExpand="True"/>
+                    <BoxContainer Orientation="Vertical" Name="CircuitSettings" VerticalExpand="True" HorizontalExpand="True" VerticalAlignment="Top"/>
                 </BoxContainer>
             </ScrollContainer>
         </BoxContainer>

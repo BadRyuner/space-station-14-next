@@ -23,10 +23,18 @@ public sealed class ElectronicAssemblyBoundUserInterface(EntityUid owner, Enum u
     protected override void ReceiveMessage(BoundUserInterfaceMessage message)
     {
         if (_menu is null
-            || message is not UpdateMenuMessage)
+            || message is not UpdateMenuMessage update)
             return;
 
-        _menu.BuildCircuitUI();
+        if (update.FullRebuild)
+            _menu.BuildUI();
+        else
+            _menu.BuildCircuitUI();
+    }
+
+    public void SendRemoveCircuitMessage(NetEntity circuit)
+    {
+        SendMessage(new RemoveCircuitMessage(circuit));
     }
 
     public void SendConnectWireMessage(NetEntity circuitToConnect, string wireToConnect, NetEntity ownerCircuit, string ownerWire)
@@ -42,6 +50,11 @@ public sealed class ElectronicAssemblyBoundUserInterface(EntityUid owner, Enum u
     public void SendChangeStringMemoryCircuitMessage(NetEntity entity, string newText)
     {
         SendMessage(new ChangeStringMemoryCircuitMessage(entity, newText));
+    }
+
+    public void SendChangeIntegerMemoryCircuitMessage(NetEntity entity, int newInt)
+    {
+        SendMessage(new ChangeIntegerMemoryCircuitMessage(entity, newInt));
     }
 
     public void SendDisconnectWireMessage(NetEntity circuit, string circuitWire, NetEntity disconnectCircuit, string disconnectWire)

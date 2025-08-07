@@ -1,0 +1,10 @@
+﻿<Control
+    xmlns="https://spacestation14.io"
+    VerticalExpand="True" HorizontalExpand="True">
+
+    <BoxContainer MaxHeight="30" Orientation="Horizontal" HorizontalExpand="True">
+        <LineEdit HorizontalExpand="True" Name="MemoryContent" />
+        <Button MinWidth="40"  Name="SetButton" Text="Set"/>
+    </BoxContainer>
+
+</Control>

@@ -6,6 +6,9 @@ namespace Content.Shared._CorvaxNext.IntegratedCircuits.Components;
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true, true)]
 public sealed partial class IntegratedCircuitComponent : Component
 {
+    [DataField("powerperuse", readOnly: true, required: true)]
+    public float PowerUsagePerUse;
+
     [DataField, AutoNetworkedField]
     public string Id = string.Empty;
 

@@ -2,7 +2,7 @@
     xmlns="https://spacestation14.io"
     VerticalExpand="True" HorizontalExpand="True"> <!-- как же я блять ненавижу копипастить VerticalExpand="True" HorizontalExpand="True" -->
     <BoxContainer Orientation="Vertical" VerticalExpand="True" HorizontalExpand="True">
-        <Button Name="MainWire" HorizontalExpand="True"/>
+        <Button Name="MainWire" HorizontalExpand="True" HorizontalAlignment="Left"/>
         <BoxContainer Orientation="Vertical" Name="Relationship" VerticalExpand="True" HorizontalExpand="True"/>
     </BoxContainer>
 </Control>

@@ -38,7 +38,8 @@ public sealed partial class WireControl : Control
                     var comp = _menu.EntManager.GetComponent<IntegratedCircuitComponent>(circuit);
                     button = new Button()
                     {
-                        Text = $"│ <Out> {externWire.Name} ← {comp.Id}"
+                        Text = $"│ <Out> {externWire.Name} ← {comp.Id}",
+                        HorizontalAlignment = HAlignment.Left
                     };
                     button.OnButtonDown += _ =>
                     {
@@ -60,7 +61,8 @@ public sealed partial class WireControl : Control
                 var comp = _menu.EntManager.GetComponent<IntegratedCircuitComponent>(circuit);
                 var button = new Button()
                 {
-                    Text = $"{(i == (wire.WriteLinks.Count - 1) ? '└' : '│')} <In> {writable.WireName} → {comp.Id}"
+                    Text = $"{(i == (wire.WriteLinks.Count - 1) ? '└' : '│')} <In> {writable.WireName} → {comp.Id}",
+                    HorizontalAlignment = HAlignment.Left
                 };
                 button.OnButtonDown += _ =>
                 {

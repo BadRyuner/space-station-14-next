@@ -1,0 +1,279 @@
+- type: entity
+  id: AddIntegersCircuitModule
+  name: Add Integers Circuit Module
+  description: Add Integers Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 5
+      wires:
+      - name: "Left"
+        wireaccess: In
+        wiretype: Integer
+      - name: "Right"
+        wireaccess: In
+        wiretype: Integer
+      - name: "Result"
+        wireaccess: Out
+        wiretype: Integer
+      events:
+      - name: "Do Math"
+        eventtype: PulseIn
+    - type: MathCircuit
+      mode: Add
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/add.rsi
+      layers:
+        - state: classic
+
+- type: entity
+  id: AddFloatsCircuitModule
+  name: Add Floats Circuit Module
+  description: Add Floats Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 5
+      wires:
+      - name: "Left"
+        wireaccess: In
+        wiretype: Float
+      - name: "Right"
+        wireaccess: In
+        wiretype: Float
+      - name: "Result"
+        wireaccess: Out
+        wiretype: Float
+      events:
+      - name: "Do Math"
+        eventtype: PulseIn
+    - type: MathCircuit
+      mode: Add
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/add.rsi
+      layers:
+        - state: classic
+
+- type: entity
+  id: SubIntegersCircuitModule
+  name: Substract Integers Circuit Module
+  description: Substract Integers Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 5
+      wires:
+      - name: "Left"
+        wireaccess: In
+        wiretype: Integer
+      - name: "Right"
+        wireaccess: In
+        wiretype: Integer
+      - name: "Result"
+        wireaccess: Out
+        wiretype: Integer
+      events:
+      - name: "Do Math"
+        eventtype: PulseIn
+    - type: MathCircuit
+      mode: Sub
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/sub.rsi
+      layers:
+        - state: classic
+
+- type: entity
+  id: SubFloatsCircuitModule
+  name: Substract Floats Circuit Module
+  description: Substract Floats Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 5
+      wires:
+      - name: "Left"
+        wireaccess: In
+        wiretype: Float
+      - name: "Right"
+        wireaccess: In
+        wiretype: Float
+      - name: "Result"
+        wireaccess: Out
+        wiretype: Float
+      events:
+      - name: "Do Math"
+        eventtype: PulseIn
+    - type: MathCircuit
+      mode: Sub
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/sub.rsi
+      layers:
+        - state: classic
+
+- type: entity
+  id: MulIntegersCircuitModule
+  name: Multiply Integers Circuit Module
+  description: Multiply Integers Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 5
+      wires:
+      - name: "Left"
+        wireaccess: In
+        wiretype: Integer
+      - name: "Right"
+        wireaccess: In
+        wiretype: Integer
+      - name: "Result"
+        wireaccess: Out
+        wiretype: Integer
+      events:
+      - name: "Do Math"
+        eventtype: PulseIn
+    - type: MathCircuit
+      mode: Mul
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/mul.rsi
+      layers:
+        - state: classic
+
+- type: entity
+  id: MulFloatsCircuitModule
+  name: Multiply Floats Circuit Module
+  description: Multiply Floats Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 5
+      wires:
+      - name: "Left"
+        wireaccess: In
+        wiretype: Float
+      - name: "Right"
+        wireaccess: In
+        wiretype: Float
+      - name: "Result"
+        wireaccess: Out
+        wiretype: Float
+      events:
+      - name: "Do Math"
+        eventtype: PulseIn
+    - type: MathCircuit
+      mode: Mul
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/mul.rsi
+      layers:
+        - state: classic
+
+- type: entity
+  id: DivIntegersCircuitModule
+  name: Divide Integers Circuit Module
+  description: Divide Integers Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 5
+      wires:
+      - name: "Left"
+        wireaccess: In
+        wiretype: Integer
+      - name: "Right"
+        wireaccess: In
+        wiretype: Integer
+      - name: "Result"
+        wireaccess: Out
+        wiretype: Integer
+      events:
+      - name: "Do Math"
+        eventtype: PulseIn
+    - type: MathCircuit
+      mode: Div
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/div.rsi
+      layers:
+        - state: classic
+
+- type: entity
+  id: DivFloatsCircuitModule
+  name: Divide Floats Circuit Module
+  description: Divide Floats Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 5
+      wires:
+      - name: "Left"
+        wireaccess: In
+        wiretype: Float
+      - name: "Right"
+        wireaccess: In
+        wiretype: Float
+      - name: "Result"
+        wireaccess: Out
+        wiretype: Float
+      events:
+      - name: "Do Math"
+        eventtype: PulseIn
+    - type: MathCircuit
+      mode: Div
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/div.rsi
+      layers:
+        - state: classic
+
+- type: entity
+  id: PowIntegersCircuitModule
+  name: Pow Integers Circuit Module
+  description: Pow Integers Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 5
+      wires:
+      - name: "Left"
+        wireaccess: In
+        wiretype: Integer
+      - name: "Right"
+        wireaccess: In
+        wiretype: Integer
+      - name: "Result"
+        wireaccess: Out
+        wiretype: Integer
+      events:
+      - name: "Do Math"
+        eventtype: PulseIn
+    - type: MathCircuit
+      mode: Pow
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/pow.rsi
+      layers:
+        - state: classic
+
+- type: entity
+  id: PowFloatsCircuitModule
+  name: Pow Floats Circuit Module
+  description: Pow Floats Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 5
+      wires:
+      - name: "Left"
+        wireaccess: In
+        wiretype: Float
+      - name: "Right"
+        wireaccess: In
+        wiretype: Float
+      - name: "Result"
+        wireaccess: Out
+        wiretype: Float
+      events:
+      - name: "Do Math"
+        eventtype: PulseIn
+    - type: MathCircuit
+      mode: Pow
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/pow.rsi
+      layers:
+        - state: classic

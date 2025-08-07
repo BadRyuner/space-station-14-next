@@ -1,0 +1,33 @@
+- type: entity
+  id: CompareValueCircuitModule
+  name: Compare Value Circuit Module
+  description: Compare Value Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: IntegratedCircuit
+      powerperuse: 5
+      wires:
+      - name: "Left"
+        wireaccess: In
+        wiretype: Any
+      - name: "Right"
+        wireaccess: In
+        wiretype: Any
+      events:
+      - name: "Compare" # 0
+        eventtype: PulseIn
+      - name: "On Left Greater" # 1
+        eventtype: PulseOut
+      - name: "On Right Greater" # 2
+        eventtype: PulseOut
+      - name: "On Equals" # 3
+        eventtype: PulseOut
+      - name: "On Not Equals" # 4. only for strings
+        eventtype: PulseOut
+      - name: "On Error" # 5
+        eventtype: PulseOut
+    - type: CompareValueCircuit
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/compare.rsi
+      layers:
+        - state: classic

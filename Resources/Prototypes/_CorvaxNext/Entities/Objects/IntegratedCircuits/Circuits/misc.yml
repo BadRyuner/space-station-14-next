@@ -1,17 +1,11 @@
 - type: entity
-  id: BaseCircuitModule
-  name: Base Circuit Module
-  description: Base Circuit Module
-  abstract: true
-  parent: BaseItem
-
-- type: entity
   id: SpeakerCircuitModule
   name: Speaker Circuit Module
   description: Speaker Circuit Module
   parent: BaseCircuitModule
   components:
     - type: IntegratedCircuit
+      powerperuse: 20
       wires:
       - name: "Text"
         wireaccess: In
@@ -32,12 +26,46 @@
       speechSounds: Borg
 
 - type: entity
+  id: RadioSpeakerCircuitModule
+  name: Radio Speaker Circuit Module
+  description: Radio Speaker Circuit Module
+  parent: SpeakerCircuitModule
+  components:
+    - type: RadioSpeaker
+      channels:
+      - Handheld
+
+- type: entity
+  id: MicrophoneCircuitModule
+  name: Microphone Circuit Module
+  description: Microphone Circuit Module
+  parent: BaseCircuitModule
+  components:
+    - type: RadioMicrophone
+      broadcastChannel: Handheld
+      enabled: true
+    - type: IntegratedCircuit
+      powerperuse: 15
+      wires:
+      - name: "Text"
+        wireaccess: Out
+        wiretype: String
+      events:
+      - name: "On Say"
+        eventtype: PulseOut
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/speaker.rsi
+      layers:
+        - state: classic
+
+- type: entity
   id: ButtonCircuitModule
   name: Button Circuit Module
   description: Button Circuit Module
   parent: BaseCircuitModule
   components:
     - type: IntegratedCircuit
+      powerperuse: 5
       events:
       - name: "On Click"
         eventtype: PulseOut
@@ -48,21 +76,18 @@
         - state: classic
 
 - type: entity
-  id: StringMemoryCircuitModule
-  name: String Memory Circuit Module
-  description: String Memory Circuit Module
+  id: DropDetectorCircuitModule
+  name: Drop Detector Circuit Module
+  description: Drop Detector Circuit Module
   parent: BaseCircuitModule
   components:
     - type: IntegratedCircuit
-      wires:
-      - name: "Text"
-        wireaccess: Out
-        wiretype: String
+      powerperuse: 5
       events:
-      - name: "Write"
-        eventtype: PulseIn
-    - type: StringMemoryCircuit
+      - name: "On Dropped"
+        eventtype: PulseOut
+    - type: DropDetectorCircuit
     - type: Sprite
-      sprite: _CorvaxNext/Objects/IntegratedCircuits/stringmem.rsi
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/templated.rsi
       layers:
         - state: classic

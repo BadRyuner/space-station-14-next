@@ -10,6 +10,9 @@ namespace Content.Shared._CorvaxNext.IntegratedCircuits.Components;
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true, true)]
 public sealed partial class ElectronicAssemblyComponent : Component
 {
+    [DataField("maxlogicdepth", readOnly: true, required: true)]
+    public int MaxLogicDepth;
+
     [DataField, AutoNetworkedField]
     public bool Open = false;
 

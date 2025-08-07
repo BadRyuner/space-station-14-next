@@ -7,16 +7,13 @@ namespace Content.Client._CorvaxNext.IntegratedCircuits.UI.Controls;
 [GenerateTypedNameReferences]
 public sealed partial class StringMemoryCircuitEditor : Control
 {
-    private ElectronicAssemblyBoundUserInterface _bui;
-    private NetEntity _entity;
-
     public StringMemoryCircuitEditor(ElectronicAssemblyBoundUserInterface bui, string text, NetEntity netEntity)
     {
         RobustXamlLoader.Load(this);
-        _bui = bui;
-        _entity = netEntity;
+        var bui1 = bui;
+        var entity = netEntity;
         MemoryContent.Text = text;
-        SetButton.OnButtonDown += _ => _bui.SendChangeStringMemoryCircuitMessage(_entity, MemoryContent.Text);
+        SetButton.OnButtonDown += _ => bui1.SendChangeStringMemoryCircuitMessage(entity, MemoryContent.Text);
     }
 }
 

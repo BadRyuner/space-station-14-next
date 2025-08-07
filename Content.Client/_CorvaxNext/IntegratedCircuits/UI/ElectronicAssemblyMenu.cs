@@ -39,6 +39,11 @@ public sealed partial class ElectronicAssemblyMenu : FancyWindow
         Bui = bui;
         _assembly = EntManager.GetComponent<ElectronicAssemblyComponent>(owner);
         CircuitList.OnItemSelected += OnCircuitSelected;
+        RemoveCircuit.OnButtonDown += _ =>
+        {
+            if (_selectedCircuit != null)
+                bui.SendRemoveCircuitMessage(EntManager.GetNetEntity(_circuitNameToEntity[_selectedCircuit!]));
+        };
         BuildUI();
     }
 
@@ -50,6 +55,7 @@ public sealed partial class ElectronicAssemblyMenu : FancyWindow
 
     public void BuildUI()
     {
+        _selectedCircuit = null;
         _circuitNameToEntity.Clear();
         _circuitNameToCircuitComp.Clear();
 
@@ -62,6 +68,10 @@ public sealed partial class ElectronicAssemblyMenu : FancyWindow
 
         CircuitList.Clear();
         CircuitList.AddItems(_circuitNameToEntity.Keys);
+
+        Wires.Children.Clear();
+        Events.Children.Clear();
+        CircuitSettings.Children.Clear();
 
         UpdateDebugLabel();
     }
@@ -91,6 +101,10 @@ public sealed partial class ElectronicAssemblyMenu : FancyWindow
         if (EntManager.TryGetComponent(selectedEntity, out StringMemoryCircuitComponent? stringMemoryCircuitComponent))
         {
             CircuitSettings.AddChild(new StringMemoryCircuitEditor(Bui, stringMemoryCircuitComponent.StringData, EntManager.GetNetEntity(selectedEntity)));
+        }
+        if (EntManager.TryGetComponent(selectedEntity, out IntegerMemoryCircuitComponent? integerMemoryCircuitComponent))
+        {
+            CircuitSettings.AddChild(new IntegerMemoryCircuitEditor(Bui, integerMemoryCircuitComponent.IntegerData.ToString(), EntManager.GetNetEntity(selectedEntity)));
         }
     }
 

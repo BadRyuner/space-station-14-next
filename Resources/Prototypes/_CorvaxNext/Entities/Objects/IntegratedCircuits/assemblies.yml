@@ -3,7 +3,7 @@
   name: Base Electronic Assembly
   description: It's a case, for building small electronics with.
   abstract: true
-  parent: BaseItem
+  parent: [BaseItem, PowerCellSlotSmallItem]
   components:
     - type: ContainerContainer
       containers:
@@ -24,7 +24,34 @@
   parent: BaseElectronicAssembly
   components:
     - type: ElectronicAssembly
+      maxlogicdepth: 7
     - type: Sprite
       sprite: _CorvaxNext/Objects/IntegratedCircuits/assemblytypea.rsi
+      layers:
+        - state: classic
+
+- type: entity
+  id: ElectronicAssemblyTypeB
+  name: Electronic Assembly Type B
+  description: Electronic Assembly Type B
+  parent: BaseElectronicAssembly
+  components:
+    - type: ElectronicAssembly
+      maxlogicdepth: 10
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/assemblytypeb.rsi
+      layers:
+        - state: classic
+
+- type: entity
+  id: ElectronicAssemblyTypeC
+  name: Electronic Assembly Type C
+  description: Electronic Assembly Type C
+  parent: BaseElectronicAssembly
+  components:
+    - type: ElectronicAssembly
+      maxlogicdepth: 13
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/IntegratedCircuits/assemblytypec.rsi
       layers:
         - state: classic

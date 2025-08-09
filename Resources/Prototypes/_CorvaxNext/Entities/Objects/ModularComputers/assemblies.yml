@@ -1,0 +1,24 @@
+- type: entity
+  id: PDAAssembly
+  name: КПК
+  description: КПК
+  parent: [BaseItem, PowerCellSlotSmallItem]
+  components:
+    - type: ModularComputer
+      pcislots: 3
+    - type: ContainerContainer
+      containers:
+        cpu: !type:ContainerSlot
+        pcis: !type:Container
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/ModularComputers/pda.rsi
+      layers:
+        - state: classic
+    - type: UserInterface
+      interfaces:
+        enum.ModularComputerUIKey.Key:
+          type: ModularComputerBoundUI
+        enum.ModularComputerProshivkaUIKey.Key:
+          type: ProshivkaBoundUI
+    - type: ActivatableUI
+      key: enum.ModularComputerUIKey.Key

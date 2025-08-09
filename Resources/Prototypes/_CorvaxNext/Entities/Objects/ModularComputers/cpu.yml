@@ -1,0 +1,21 @@
+- type: entity
+  id: BaseCpu
+  name: Base Cpu
+  description: Base Cpu
+  parent: BaseItem
+  abstract: true
+
+- type: entity
+  id: NtCoreOne
+  name: NT Core 1
+  description: Дважды два для него самое большое препятствие
+  parent: BaseCpu
+  components:
+    - type: PciCpu
+      ram: 1048576 # 1 MB
+      ips: 10 # инструкций в секунду
+      ppi: 1 # скока кушац за инструкцию
+    - type: Sprite
+      sprite: _CorvaxNext/Objects/ModularComputers/cpu_one.rsi
+      layers:
+        - state: classic

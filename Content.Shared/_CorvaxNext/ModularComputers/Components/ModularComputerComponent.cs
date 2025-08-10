@@ -4,7 +4,7 @@ using Robust.Shared.Containers;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
-namespace Content.Shared._CorvaxNext.ModularComputers;
+namespace Content.Shared._CorvaxNext.ModularComputers.Components;
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true, true)]
 public sealed partial class ModularComputerComponent : Component

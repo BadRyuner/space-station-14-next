@@ -1,10 +1,11 @@
+using Content.Server._CorvaxNext.ModularComputers.Components;
 using Content.Server._CorvaxNext.ModularComputers.Emulator;
-using Content.Server._CorvaxNext.ModularComputers.Wrappers;
 using Content.Server.PowerCell;
 using Content.Shared._CorvaxNext.ModularComputers;
 using Content.Shared._CorvaxNext.ModularComputers.Components;
 using Content.Shared._CorvaxNext.ModularComputers.Events;
 using Content.Shared._CorvaxNext.ModularComputers.Messages;
+using Content.Shared.Interaction;
 
 namespace Content.Server._CorvaxNext.ModularComputers;
 
@@ -15,15 +16,41 @@ public sealed class ModularComputersSystem : SharedModularComputersSystem
     public override void Initialize()
     {
         base.Initialize();
+        SubscribeLocalEvent<Shared._CorvaxNext.ModularComputers.Components.ModularComputerComponent, InteractUsingEvent>(OnInteract);
         SubscribeNetworkEvent<ChangeModularComputerStateEvent>(OnChangeModularComputerStateEvent);
         SubscribeNetworkEvent<CreateLoadProgramUIEvent>(OnCreateLoadProgramUIEvent);
-        SubscribeLocalEvent<PciGpuComponent, ComponentStartup>(OnGpuStart);
 
-        Subs.BuiEvents<ModularComputerComponent>(ModularComputerProshivkaUIKey.Key,
+        Subs.BuiEvents<Shared._CorvaxNext.ModularComputers.Components.ModularComputerComponent>(ModularComputerProshivkaUIKey.Key,
             t =>
             {
                 t.Event<LoadProgramMessage>(OnLoadProgramMessage);
             });
+    }
+
+    private void OnInteract(Entity<Shared._CorvaxNext.ModularComputers.Components.ModularComputerComponent> ent, ref InteractUsingEvent args)
+    {
+        if (args.Handled)
+            return;
+
+        if (Tool.HasQuality(args.Used, ent.Comp.OpeningTool))
+        {
+            ent.Comp.Open = !ent.Comp.Open;
+            DirtyField(ent.Owner, ent.Comp, nameof(ent.Comp.Open));
+
+            var sound = ent.Comp.Open ? ent.Comp.ScrewdriverOpenSound : ent.Comp.ScrewdriverCloseSound;
+            Audio.PlayPredicted(sound, args.Target, args.User);
+        }
+        else if (ent.Comp.Open && TryComp<BasePciComponent>(args.Used, out var pciComponent))
+        {
+            if (pciComponent is PciCpuComponent cpu)
+            {
+                Container.Insert(args.Used, ent.Comp.CpuSlot);
+                cpu.ModularComputer = ent.Owner;
+            }
+            else
+                Container.Insert(args.Used, ent.Comp.PciContainer);
+            Audio.PlayPredicted(ent.Comp.CircuitInsertionSound, args.Target, args.User);
+        }
     }
 
     private void OnCreateLoadProgramUIEvent(CreateLoadProgramUIEvent msg, EntitySessionEventArgs args)
@@ -33,7 +60,7 @@ public sealed class ModularComputersSystem : SharedModularComputersSystem
             UserInterfaceSystem.OpenUi((ent, comp), ModularComputerProshivkaUIKey.Key);
     }
 
-    private void OnLoadProgramMessage(EntityUid uid, ModularComputerComponent component, LoadProgramMessage args)
+    private void OnLoadProgramMessage(EntityUid uid, Shared._CorvaxNext.ModularComputers.Components.ModularComputerComponent component, LoadProgramMessage args)
     {
         if (EntityManager.TryGetComponent(component.CpuSlot.ContainedEntity, out PciCpuComponent? cpuComp))
         {
@@ -50,15 +77,10 @@ public sealed class ModularComputersSystem : SharedModularComputersSystem
         }
     }
 
-    private void OnGpuStart(Entity<PciGpuComponent> ent, ref ComponentStartup args)
-    {
-        ent.Comp.Wrapper = new GpuPciWrapper(ent.Comp);
-    }
-
     private void OnChangeModularComputerStateEvent(ChangeModularComputerStateEvent ev)
     {
         var entity = EntityManager.GetEntity(ev.Target);
-        if (EntityManager.TryGetComponent(entity, out ModularComputerComponent? comp))
+        if (EntityManager.TryGetComponent(entity, out Shared._CorvaxNext.ModularComputers.Components.ModularComputerComponent? comp))
         {
             comp.IsOn = !comp.IsOn;
             DirtyField(entity, comp, nameof(comp.IsOn));
@@ -69,7 +91,7 @@ public sealed class ModularComputersSystem : SharedModularComputersSystem
     {
         base.Update(frameTime);
 
-        foreach (var modularComputerComponent in EntityManager.EntityQuery<ModularComputerComponent>())
+        foreach (var modularComputerComponent in EntityManager.EntityQuery<Shared._CorvaxNext.ModularComputers.Components.ModularComputerComponent>())
         {
             if (modularComputerComponent is { IsOn: true, CpuSlot.ContainedEntity: { Valid: true } cpuEntity } &&
                 EntityManager.TryGetComponent(cpuEntity, out PciCpuComponent? cpu))
@@ -80,14 +102,20 @@ public sealed class ModularComputersSystem : SharedModularComputersSystem
                     cpu.AccumulatedTime -= cpu.RequiredTime;
                     if (_powerCellSystem.TryUseCharge(modularComputerComponent.MyOwner, cpu.PowerPerInstruction))
                     {
-                        Cpu? riscVCpu = (Cpu?)cpu.Cpu;
+                        var riscVCpu = cpu.Cpu;
                         if (riscVCpu == null)
                         {
                             riscVCpu = new Cpu(cpu.RamSize, cpu);
                             cpu.Cpu = riscVCpu;
                         }
-                        if (TryGetPciComponent<PciGpuComponent>(modularComputerComponent, out var gpu, out var gpuEnt) && gpu.RequireSync)
+
+                        if (TryGetPciComponent<PciGpuComponent>(modularComputerComponent,
+                                out var gpu,
+                                out var gpuEnt) && gpu.RequireSync)
+                        {
                             DirtyField(gpuEnt, gpu, nameof(gpu.Commands));
+                            gpu.RequireSync = false;
+                        }
                         try
                         {
                             riscVCpu.Execute();

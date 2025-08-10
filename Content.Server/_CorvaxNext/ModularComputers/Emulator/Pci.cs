@@ -1,4 +1,3 @@
-using Content.Server._CorvaxNext.ModularComputers.Wrappers;
 using Content.Shared._CorvaxNext.ModularComputers.Components;
 using Content.Shared._CorvaxNext.ModularComputers.Emulator;
 
@@ -35,11 +34,9 @@ public sealed class Pci
         var pci = ResolvePci(addr);
         if (pci != null)
         {
-            if (pci.Wrapper is BasePciWrapper wrapper)
+            if (pci is IPciComponent sub)
             {
-                if (wrapper.Cpu == null)
-                    wrapper.Cpu = _myCpu;
-                return wrapper.Read(addr, size);
+                return sub.Read(_myCpu.Bus.Dram, addr, size);
             }
         }
 
@@ -51,11 +48,9 @@ public sealed class Pci
         var pci = ResolvePci(addr);
         if (pci != null)
         {
-            if (pci.Wrapper is BasePciWrapper wrapper)
+            if (pci is IPciComponent sub)
             {
-                if (wrapper.Cpu == null)
-                    wrapper.Cpu = _myCpu;
-                wrapper.Write(addr, value, size);
+                sub.Write(_myCpu.Bus.Dram, addr, value, size);
             }
         }
         // или мб ошибку кидать?

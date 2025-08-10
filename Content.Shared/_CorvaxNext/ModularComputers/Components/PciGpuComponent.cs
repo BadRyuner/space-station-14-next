@@ -5,9 +5,9 @@ using Robust.Shared.Serialization;
 namespace Content.Shared._CorvaxNext.ModularComputers.Components;
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true, true)]
-public sealed partial class PciGpuComponent : BasePciComponent
+public sealed partial class PciGpuComponent : BasePciComponent, IPciComponent
 {
-    public const ulong Start = PciCpuComponent.PciEnd + 0x1;
+    public const ulong Start = 0xf00_0100;
     public const ulong End = Start + 0x99;
     public const ulong GpuSetArgStart = Start + 1;
     public const ulong GpuSetArgEnd = GpuSetArgStart + 15;
@@ -21,6 +21,48 @@ public sealed partial class PciGpuComponent : BasePciComponent
     {
         PciAddressStart = Start;
         PciAddressStart = End;
+    }
+
+    private enum DrawCommands : ulong
+    {
+        DrawLine = 0x1
+    }
+
+    [NonSerialized]
+    public ulong[] Args = new ulong[16];
+
+    public ulong Read(Dram dram, ulong address, Bits size)
+    {
+        return 1;
+    }
+
+    public void Write(Dram dram, ulong address, ulong value, Bits size)
+    {
+        if (address == PciGpuComponent.Start)
+        {
+            switch (value)
+            {
+                case 0x10: // Draw
+                {
+                    switch ((DrawCommands)Args[0])
+                    {
+                        case DrawCommands.DrawLine:
+                        {
+                            RequireSync = true;
+                            var clrAddr = Args[1];
+                            var clr = new Color((byte)dram.Read8(clrAddr), (byte)dram.Read8(clrAddr+1), (byte)dram.Read8(clrAddr+2), (byte)dram.Read8(clrAddr+3));
+                            Commands.Add(new DrawLine(clr, (int)Args[2], (int)Args[3], (int)Args[4], (int)Args[5]));
+                            return;
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+        else if (address >= PciGpuComponent.GpuSetArgStart && address <= PciGpuComponent.GpuSetArgEnd)
+        {
+            Args[address - PciGpuComponent.GpuSetArgStart] = value;
+        }
     }
 }
 

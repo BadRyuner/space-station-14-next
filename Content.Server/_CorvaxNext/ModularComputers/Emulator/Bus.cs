@@ -1,4 +1,4 @@
-using Content.Shared._CorvaxNext.ModularComputers.Components;
+using Content.Server._CorvaxNext.ModularComputers.Components;
 using Content.Shared._CorvaxNext.ModularComputers.Emulator;
 
 namespace Content.Server._CorvaxNext.ModularComputers.Emulator;

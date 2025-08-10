@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using Content.Shared._CorvaxNext.ModularComputers.Emulator;
 
 namespace Content.Server._CorvaxNext.ModularComputers.Emulator;
 

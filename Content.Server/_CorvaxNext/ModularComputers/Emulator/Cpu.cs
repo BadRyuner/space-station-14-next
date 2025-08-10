@@ -1,6 +1,7 @@
-using Content.Shared._CorvaxNext.ModularComputers.Components;
 using Content.Shared._CorvaxNext.ModularComputers.Emulator;
 using System.Runtime.CompilerServices;
+using Content.Server._CorvaxNext.ModularComputers.Components;
+
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
 

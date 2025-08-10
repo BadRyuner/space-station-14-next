@@ -1,7 +1,7 @@
 - type: entity
   id: PDAAssembly
-  name: КПК
-  description: КПК
+  name: PDA
+  description: PDA
   parent: [BaseItem, PowerCellSlotSmallItem]
   components:
     - type: ModularComputer

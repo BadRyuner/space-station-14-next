@@ -1,6 +1,4 @@
-using Content.Shared._CorvaxNext.ModularComputers.Emulator;
-
-namespace Content.Server._CorvaxNext.ModularComputers.Emulator;
+namespace Content.Shared._CorvaxNext.ModularComputers.Emulator;
 
 // мб стоит BinaryPrimitives.ReadLittleEndian использовать?
 
@@ -38,7 +36,7 @@ public struct Dram(int initialSize)
             Bits.HalfWord => Read16(addr),
             Bits.Word => Read32(addr),
             Bits.DoubleWord => Read64(addr),
-            _ => throw new LoadAccessFault(),
+            _ => throw new Exception(), // LoadAccessFault пупупупу
         };
     }
 
@@ -59,7 +57,7 @@ public struct Dram(int initialSize)
                 Write64(addr, value);
                 break;
             default:
-                throw new StoreAMOAccessFault();
+                throw new Exception(); // Smoloadexc что-то там
         }
     }
 

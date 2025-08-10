@@ -1,4 +1,7 @@
-namespace Content.Shared._CorvaxNext.ModularComputers.Components;
+using Content.Server._CorvaxNext.ModularComputers.Emulator;
+using Content.Shared._CorvaxNext.ModularComputers.Components;
+
+namespace Content.Server._CorvaxNext.ModularComputers.Components;
 
 [RegisterComponent]
 public sealed partial class PciCpuComponent : BasePciComponent
@@ -24,7 +27,7 @@ public sealed partial class PciCpuComponent : BasePciComponent
     public float RequiredTime => 1 / InstructionsPerSecond;
 
     [NonSerialized]
-    public object? Cpu;
+    public Cpu? Cpu;
 
     public PciCpuComponent()
     {

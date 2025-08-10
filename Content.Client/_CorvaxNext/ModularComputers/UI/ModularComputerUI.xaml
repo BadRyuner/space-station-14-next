@@ -1,9 +1,10 @@
-﻿<controls1:FancyWindow
+﻿<controls:ModularComputerUI
     xmlns="https://spacestation14.io"
     xmlns:controls="clr-namespace:Content.Client._CorvaxNext.ModularComputers.UI"
-    xmlns:controls1="clr-namespace:Content.Client.UserInterface.Controls"
     Title = "КПК"
     Resizable="False"
-    Size="310 310">
-    <controls:GPURender Name="GpuRender" Margin="5 5 5 5"/>
-</controls1:FancyWindow>
+    MinSize="310 310">
+    <BoxContainer HorizontalExpand="true" VerticalExpand="true">
+        <controls:GPURender Name="GpuRender" Margin="5 5 5 5"/>
+    </BoxContainer>
+</controls:ModularComputerUI>

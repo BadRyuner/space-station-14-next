@@ -6,28 +6,37 @@ using Content.Shared._CorvaxNext.ModularComputers.Components;
 using Content.Shared._CorvaxNext.ModularComputers.Events;
 using Content.Shared._CorvaxNext.ModularComputers.Messages;
 using Content.Shared.Interaction;
+using Robust.Server.Audio;
 
 namespace Content.Server._CorvaxNext.ModularComputers;
 
 public sealed class ModularComputersSystem : SharedModularComputersSystem
 {
     [Dependency] private readonly PowerCellSystem _powerCellSystem = default!;
+    [Dependency] private readonly AudioSystem _audio = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<Shared._CorvaxNext.ModularComputers.Components.ModularComputerComponent, InteractUsingEvent>(OnInteract);
-        SubscribeNetworkEvent<ChangeModularComputerStateEvent>(OnChangeModularComputerStateEvent);
         SubscribeNetworkEvent<CreateLoadProgramUIEvent>(OnCreateLoadProgramUIEvent);
+        SubscribeLocalEvent<ModularComputerComponent, InteractUsingEvent>(OnInteract);
+        SubscribeNetworkEvent<ChangeModularComputerStateEvent>(OnChangeModularComputerStateEvent);
 
-        Subs.BuiEvents<Shared._CorvaxNext.ModularComputers.Components.ModularComputerComponent>(ModularComputerProshivkaUIKey.Key,
+        Subs.BuiEvents<ModularComputerComponent>(ModularComputerProshivkaUIKey.Key,
             t =>
             {
                 t.Event<LoadProgramMessage>(OnLoadProgramMessage);
             });
     }
 
-    private void OnInteract(Entity<Shared._CorvaxNext.ModularComputers.Components.ModularComputerComponent> ent, ref InteractUsingEvent args)
+    private void OnCreateLoadProgramUIEvent(CreateLoadProgramUIEvent msg, EntitySessionEventArgs args)
+    {
+        var ent = EntManager.GetEntity(msg.Target);
+        if (EntityManager.TryGetComponent(ent, out UserInterfaceComponent? comp))
+            UserInterfaceSystem.OpenUi((ent, comp), ModularComputerProshivkaUIKey.Key, args.SenderSession);
+    }
+
+    private void OnInteract(Entity<ModularComputerComponent> ent, ref InteractUsingEvent args)
     {
         if (args.Handled)
             return;
@@ -38,52 +47,63 @@ public sealed class ModularComputersSystem : SharedModularComputersSystem
             DirtyField(ent.Owner, ent.Comp, nameof(ent.Comp.Open));
 
             var sound = ent.Comp.Open ? ent.Comp.ScrewdriverOpenSound : ent.Comp.ScrewdriverCloseSound;
-            Audio.PlayPredicted(sound, args.Target, args.User);
+            _audio.PlayPvs(sound, args.Target);
+            return;
         }
-        else if (ent.Comp.Open && TryComp<BasePciComponent>(args.Used, out var pciComponent))
+
+        BasePciComponent? pciComponent = null;
+
+        // ДА ДАВАЙ ДАВАЙ ДАВАЙ МЫ УЖЕ НЕ УМЕЕМ В НАСЛЕДОВАНИЕ в TRYCOMP
+        if (TryComp(args.Used, out PciCpuComponent? cpu))
+            pciComponent = cpu;
+        else if (TryComp(args.Used, out PciGpuComponent? gpu))
+            pciComponent = gpu;
+
+        if (ent.Comp.Open && pciComponent != null)
         {
-            if (pciComponent is PciCpuComponent cpu)
+            if (cpu != null)
             {
                 Container.Insert(args.Used, ent.Comp.CpuSlot);
                 cpu.ModularComputer = ent.Owner;
             }
             else
                 Container.Insert(args.Used, ent.Comp.PciContainer);
-            Audio.PlayPredicted(ent.Comp.CircuitInsertionSound, args.Target, args.User);
+            _audio.PlayPvs(ent.Comp.CircuitInsertionSound, args.Target);
         }
     }
 
-    private void OnCreateLoadProgramUIEvent(CreateLoadProgramUIEvent msg, EntitySessionEventArgs args)
-    {
-        var ent = EntManager.GetEntity(msg.Target);
-        if (EntityManager.TryGetComponent(ent, out UserInterfaceComponent? comp))
-            UserInterfaceSystem.OpenUi((ent, comp), ModularComputerProshivkaUIKey.Key);
-    }
-
-    private void OnLoadProgramMessage(EntityUid uid, Shared._CorvaxNext.ModularComputers.Components.ModularComputerComponent component, LoadProgramMessage args)
+    private void OnLoadProgramMessage(EntityUid uid, ModularComputerComponent component, LoadProgramMessage args)
     {
         if (EntityManager.TryGetComponent(component.CpuSlot.ContainedEntity, out PciCpuComponent? cpuComp))
         {
-            if (cpuComp.Cpu is not Cpu {} cpu)
+            Cpu cpu;
+            if (cpuComp.Cpu == null)
             {
                 cpu = new Cpu(cpuComp.RamSize, cpuComp);
                 cpuComp.Cpu = cpu;
             }
+            else
+                cpu = cpuComp.Cpu;
 
             var prog = args.Program.AsSpan();
             if (prog[1] == 0x45)
                 prog = prog.Slice(0x1000); // skip ELF header
             cpu.LoadProgramm(prog);
+            Log.Debug($"Loaded program with size {prog.Length}");
         }
     }
 
     private void OnChangeModularComputerStateEvent(ChangeModularComputerStateEvent ev)
     {
         var entity = EntityManager.GetEntity(ev.Target);
-        if (EntityManager.TryGetComponent(entity, out Shared._CorvaxNext.ModularComputers.Components.ModularComputerComponent? comp))
+        if (EntityManager.TryGetComponent(entity, out ModularComputerComponent? comp))
         {
-            comp.IsOn = !comp.IsOn;
-            DirtyField(entity, comp, nameof(comp.IsOn));
+            if (comp.IsOn != ev.NewState)
+            {
+                Log.Debug($"Changed mod.comp state from {comp.IsOn} to {ev.NewState}");
+                comp.IsOn = ev.NewState;
+                DirtyField(entity, comp, nameof(comp.IsOn));
+            }
         }
     }
 
@@ -96,33 +116,31 @@ public sealed class ModularComputersSystem : SharedModularComputersSystem
             if (modularComputerComponent is { IsOn: true, CpuSlot.ContainedEntity: { Valid: true } cpuEntity } &&
                 EntityManager.TryGetComponent(cpuEntity, out PciCpuComponent? cpu))
             {
-                cpu.AccumulatedTime += frameTime;
-                while (cpu.AccumulatedTime >= cpu.RequiredTime)
+                if (cpu.Cpu is { } riscVCpu)
                 {
-                    cpu.AccumulatedTime -= cpu.RequiredTime;
-                    if (_powerCellSystem.TryUseCharge(modularComputerComponent.MyOwner, cpu.PowerPerInstruction))
+                    cpu.AccumulatedTime += frameTime;
+                    while (cpu.AccumulatedTime >= cpu.RequiredTime)
                     {
-                        var riscVCpu = cpu.Cpu;
-                        if (riscVCpu == null)
+                        cpu.AccumulatedTime -= cpu.RequiredTime;
+                        if (!riscVCpu.Idle) // _powerCellSystem.TryUseCharge(modularComputerComponent.MyOwner, cpu.PowerPerInstruction)
                         {
-                            riscVCpu = new Cpu(cpu.RamSize, cpu);
-                            cpu.Cpu = riscVCpu;
-                        }
+                            try
+                            {
+                                riscVCpu.Execute();
+                            }
+                            catch
+                            {
+                                // handle in future
+                            }
 
-                        if (TryGetPciComponent<PciGpuComponent>(modularComputerComponent,
-                                out var gpu,
-                                out var gpuEnt) && gpu.RequireSync)
-                        {
-                            DirtyField(gpuEnt, gpu, nameof(gpu.Commands));
-                            gpu.RequireSync = false;
-                        }
-                        try
-                        {
-                            riscVCpu.Execute();
-                        }
-                        catch
-                        {
-                            // handle in future
+                            if (TryGetPciComponent<PciGpuComponent>(modularComputerComponent,
+                                    out var gpu,
+                                    out var gpuEnt) && gpu.RequireSync)
+                            {
+                                DirtyField(gpuEnt, gpu, nameof(gpu.Commands));
+                                gpu.RequireSync = false;
+                                Log.Debug("Sync GPU!");
+                            }
                         }
                     }
                 }

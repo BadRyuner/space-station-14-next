@@ -1,8 +1,5 @@
-using Robust.Shared.GameStates;
-
 namespace Content.Shared._CorvaxNext.ModularComputers.Components;
 
-[NetworkedComponent]
 public abstract partial class BasePciComponent : Component
 {
     [DataField("builtin")]

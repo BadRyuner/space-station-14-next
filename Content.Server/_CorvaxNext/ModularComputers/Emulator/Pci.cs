@@ -8,7 +8,8 @@ public sealed class Pci
     public const int PciBase = 0xf00_0000;
     public const int PciEnd = PciBase + 0x100_0000;
 
-    [Dependency] private ModularComputersSystem _modularComputersSystem = null!;
+    [Dependency] private IEntityManager _entManager = null!;
+    private ModularComputersSystem _modularComputersSystem;
 
     private readonly Cpu _myCpu;
 
@@ -16,6 +17,7 @@ public sealed class Pci
     {
         _myCpu = cpu;
         IoCManager.InjectDependencies(this);
+        _modularComputersSystem = _entManager.System<ModularComputersSystem>();
     }
 
     private BasePciComponent? ResolvePci(ulong addr)

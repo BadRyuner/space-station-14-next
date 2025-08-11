@@ -1,7 +1,8 @@
 ﻿<controls1:FancyWindow
     xmlns="https://spacestation14.io"
-    xmlns:controls="clr-namespace:Content.Client._CorvaxNext.ModularComputers.UI"
     xmlns:controls1="clr-namespace:Content.Client.UserInterface.Controls"
     Title="Прошивка">
-    <Button Name="Button" Text="Выбрать прошивку и прошить"/>
+    <BoxContainer HorizontalExpand="true" VerticalExpand="true">
+        <Button Name="Button" Text="Выбрать прошивку и прошить" HorizontalExpand="true" VerticalExpand="true"/>
+    </BoxContainer>
 </controls1:FancyWindow>

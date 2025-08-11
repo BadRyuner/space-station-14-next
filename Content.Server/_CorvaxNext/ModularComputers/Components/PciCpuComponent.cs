@@ -24,7 +24,7 @@ public sealed partial class PciCpuComponent : BasePciComponent
 
     public float AccumulatedTime = 0;
 
-    public float RequiredTime => 1 / InstructionsPerSecond;
+    public float RequiredTime => 1f / InstructionsPerSecond;
 
     [NonSerialized]
     public Cpu? Cpu;

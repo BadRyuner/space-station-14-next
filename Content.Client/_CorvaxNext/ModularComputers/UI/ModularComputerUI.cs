@@ -10,12 +10,13 @@ namespace Content.Client._CorvaxNext.ModularComputers.UI;
 public sealed partial class ModularComputerUI : FancyWindow
 {
     [Dependency] private IEntityManager _entManager = null!;
-    [Dependency] private ModularComputersSystem _modComps = null!;
+    private ModularComputersSystem _modComps;
 
     public ModularComputerUI()
     {
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
+        _modComps = _entManager.System<ModularComputersSystem>();
     }
 
     public void Initialize(EntityUid modcomp)

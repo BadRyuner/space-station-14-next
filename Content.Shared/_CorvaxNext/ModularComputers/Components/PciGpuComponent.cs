@@ -12,6 +12,7 @@ public sealed partial class PciGpuComponent : BasePciComponent, IPciComponent
     public const ulong GpuSetArgStart = Start + 1;
     public const ulong GpuSetArgEnd = GpuSetArgStart + 15;
 
+    [NonSerialized]
     public bool RequireSync = false;
 
     [DataField, AutoNetworkedField]
@@ -20,7 +21,7 @@ public sealed partial class PciGpuComponent : BasePciComponent, IPciComponent
     public PciGpuComponent()
     {
         PciAddressStart = Start;
-        PciAddressStart = End;
+        PciAddressEnd = End;
     }
 
     private enum DrawCommands : ulong
@@ -38,7 +39,7 @@ public sealed partial class PciGpuComponent : BasePciComponent, IPciComponent
 
     public void Write(Dram dram, ulong address, ulong value, Bits size)
     {
-        if (address == PciGpuComponent.Start)
+        if (address == Start)
         {
             switch (value)
             {
@@ -59,9 +60,9 @@ public sealed partial class PciGpuComponent : BasePciComponent, IPciComponent
                 }
             }
         }
-        else if (address >= PciGpuComponent.GpuSetArgStart && address <= PciGpuComponent.GpuSetArgEnd)
+        else if (address >= GpuSetArgStart && address <= GpuSetArgEnd)
         {
-            Args[address - PciGpuComponent.GpuSetArgStart] = value;
+            Args[address - GpuSetArgStart] = value;
         }
     }
 }

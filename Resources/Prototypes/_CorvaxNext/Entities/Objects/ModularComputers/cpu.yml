@@ -6,8 +6,8 @@
   abstract: true
 
 - type: entity
-  id: NtCoreOne
-  name: NT Core 1
+  id: NtCoreOne12345
+  name: Процессор NT Core 1
   description: Дважды два для него самое большое препятствие
   parent: BaseCpu
   components:

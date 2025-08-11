@@ -13,39 +13,39 @@ public abstract class SharedModularComputersSystem : EntitySystem
 {
     [Dependency] protected readonly SharedContainerSystem Container = default!;
     [Dependency] protected readonly IEntityManager EntManager = default!;
-    [Dependency] protected readonly SharedAudioSystem Audio = default!;
     [Dependency] protected readonly SharedToolSystem Tool = default!;
     [Dependency] protected readonly SharedUserInterfaceSystem UserInterfaceSystem = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<Components.ModularComputerComponent, ComponentStartup>(OnModularStart);
-        SubscribeLocalEvent<Components.ModularComputerComponent, GetVerbsEvent<Verb>>(GetModularComputerVerbs);
+        SubscribeLocalEvent<ModularComputerComponent, ComponentStartup>(OnModularStart);
+        SubscribeLocalEvent<ModularComputerComponent, GetVerbsEvent<Verb>>(GetModularComputerVerbs);
     }
 
-    private void GetModularComputerVerbs(Entity<Components.ModularComputerComponent> ent, ref GetVerbsEvent<Verb> args)
+    private void GetModularComputerVerbs(Entity<ModularComputerComponent> ent, ref GetVerbsEvent<Verb> args)
     {
+        var kpk = EntManager.GetNetEntity(ent.Owner);
         args.Verbs.Add(new Verb()
         {
             Text = "Переключить",
-            Act = () => RaiseNetworkEvent(new ChangeModularComputerStateEvent(EntManager.GetNetEntity(ent.Owner))),
+            Act = () => RaiseNetworkEvent(new ChangeModularComputerStateEvent(kpk, !ent.Comp.IsOn)),
         });
         args.Verbs.Add(new Verb()
         {
             Text = "Перепрошить",
-            Act = () => RaiseNetworkEvent(new CreateLoadProgramUIEvent(EntManager.GetNetEntity(ent.Owner))),
+            Act = () => RaiseNetworkEvent(new CreateLoadProgramUIEvent(kpk)),
         });
     }
 
-    private void OnModularStart(EntityUid uid, Components.ModularComputerComponent component, ComponentStartup args)
+    private void OnModularStart(EntityUid uid, ModularComputerComponent component, ComponentStartup args)
     {
         component.MyOwner = uid;
         component.PciContainer = Container.EnsureContainer<Container>(uid, "pcis");
         component.CpuSlot = Container.EnsureContainer<ContainerSlot>(uid, "cpu");
     }
 
-    public bool TryGetPciComponent<T>(Components.ModularComputerComponent modularComputer, [NotNullWhen(true)] out T? comp, out EntityUid entity) where T : BasePciComponent
+    public bool TryGetPciComponent<T>(ModularComputerComponent modularComputer, [NotNullWhen(true)] out T? comp, out EntityUid entity) where T : BasePciComponent
     {
         foreach (var c in modularComputer.PciContainer.ContainedEntities)
         {
@@ -63,11 +63,16 @@ public abstract class SharedModularComputersSystem : EntitySystem
     public List<BasePciComponent> GetAllPciComponents(EntityUid modularComp)
     {
         var list = new List<BasePciComponent>();
-        if (EntManager.TryGetComponent<Components.ModularComputerComponent>(modularComp, out var comp))
+        if (EntManager.TryGetComponent<ModularComputerComponent>(modularComp, out var comp))
         {
             foreach (var c in comp.PciContainer.ContainedEntities)
-                if (EntManager.TryGetComponent<BasePciComponent>(c, out var pci))
-                    list.Add(pci);
+            {
+                foreach (var entComp in EntManager.GetComponents(c))
+                {
+                    if (entComp is BasePciComponent pci)
+                        list.Add(pci);
+                }
+            }
         }
         return list;
     }

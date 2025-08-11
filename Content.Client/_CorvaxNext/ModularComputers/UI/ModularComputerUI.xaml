@@ -6,6 +6,6 @@
     Resizable="False"
     MinSize="310 310">
     <BoxContainer HorizontalExpand="true" VerticalExpand="true">
-        <controls:GPURender Name="GpuRender" Margin="5 5 5 5"/>
+        <controls:GpuRender Name="GpuRender" Margin="5 5 5 5"/>
     </BoxContainer>
 </wizards:FancyWindow>

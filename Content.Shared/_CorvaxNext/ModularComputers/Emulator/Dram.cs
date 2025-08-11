@@ -1,3 +1,6 @@
+using System.Runtime.InteropServices;
+using System.Text;
+
 namespace Content.Shared._CorvaxNext.ModularComputers.Emulator;
 
 // мб стоит BinaryPrimitives.ReadLittleEndian использовать?
@@ -38,6 +41,23 @@ public struct Dram(int initialSize)
             Bits.DoubleWord => Read64(addr),
             _ => throw new Exception(), // LoadAccessFault пупупупу
         };
+    }
+
+    public string ReadUTF8NullTerminatedText(ulong addr)
+    {
+        // bad or null ref
+        if (addr < DramBase)
+            return string.Empty;
+
+        var start = _dram.AsSpan().Slice((int)addr - DramBase);
+        var terminator = start.IndexOf((byte)0);
+        if (terminator == 0) // nice try mr."\0"
+            return string.Empty;
+        if (terminator > 512) // чет дофига букавок. Либо забыли \0, либо хотят положить на лопатки
+            return string.Empty;
+
+        var text = start.Slice(0, terminator);
+        return Encoding.UTF8.GetString(text);
     }
 
     public void Write(ulong addr, ulong value, Bits size)
